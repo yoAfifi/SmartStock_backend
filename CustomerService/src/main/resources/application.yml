@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: CustomerService
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/CustomerService_db
+    username: postgres
+    password: youssefyoussef99
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        envers:
+          audit_table_suffix: _AUD  # Envers-Konfiguration
+          store_data_at_delete: true
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+jwt:
+  secret: ${JWT_SECRET:HMHHFu9OkiscolD1SI+H7Ae5aBwJiw8vyMfcFkZOtYFI4mljUvsHONlsRFlVsYjYg1MlndmrYyJb5aYT/aq1NQ==}

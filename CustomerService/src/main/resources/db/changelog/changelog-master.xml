@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <!-- Existing changesets -->
+    <changeSet id="1" author="afifi">
+        <createTable tableName="customers">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone" type="VARCHAR(50)"/>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="afifi">
+        <addColumn tableName="customers">
+            <column name="user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+<!--    <changeSet id="4" author="afifi">-->
+<!--        <createTable tableName="revinfo">-->
+<!--            <column name="rev" type="BIGINT" autoIncrement="true">-->
+<!--                <constraints primaryKey="true"/>-->
+<!--            </column>-->
+<!--            <column name="revtstmp" type="BIGINT"/>-->
+<!--        </createTable>-->
+
+<!--        <createSequence-->
+<!--                sequenceName="revinfo_seq"-->
+<!--                startValue="1"-->
+<!--                incrementBy="50"/>-->
+<!--    </changeSet>-->
+
+</databaseChangeLog>
