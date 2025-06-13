@@ -2,7 +2,7 @@ services:
   eureka-server:
     build: ./eureka-server
     ports:
-      - "${EUREKA_PORT:-8761}:8761"
+      - "8761:8761"
     restart: unless-stopped
     networks:
       - smartstock-network
@@ -10,7 +10,7 @@ services:
   gateway-service:
     build: ./GatewayService
     ports:
-      - "${GATEWAY_PORT:-8080}:8080"
+      - "8080:8080"
     depends_on:
       - eureka-server
     restart: unless-stopped
@@ -23,10 +23,10 @@ services:
       - eureka-server
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:${DB_PORT:-5432}/${POSTGRES_DB:-smartstock}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_URL:-http://eureka-server:8761/eureka/}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartstock
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     restart: unless-stopped
     networks:
       - smartstock-network
@@ -37,10 +37,10 @@ services:
       - eureka-server
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:${DB_PORT:-5432}/${POSTGRES_DB:-smartstock}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_URL:-http://eureka-server:8761/eureka/}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartstock
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     restart: unless-stopped
     networks:
       - smartstock-network
@@ -51,10 +51,10 @@ services:
       - eureka-server
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:${DB_PORT:-5432}/${POSTGRES_DB:-smartstock}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_URL:-http://eureka-server:8761/eureka/}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartstock
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     restart: unless-stopped
     networks:
       - smartstock-network
@@ -65,10 +65,10 @@ services:
       - eureka-server
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:${DB_PORT:-5432}/${POSTGRES_DB:-smartstock}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_URL:-http://eureka-server:8761/eureka/}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartstock
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     restart: unless-stopped
     networks:
       - smartstock-network
@@ -76,16 +76,16 @@ services:
   postgres:
     image: postgres:14-alpine
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-smartstock}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=smartstock
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-smartstock}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d smartstock"]
       interval: 10s
       timeout: 5s
       retries: 5
