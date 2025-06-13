@@ -17,17 +17,12 @@ git clone <repository-url>
 cd SmartStock_backend
 ```
 
-2. Create environment file:
-```bash
-cp .env.example .env
-```
-
-3. Build the services:
+2. Build the services:
 ```bash
 mvn clean package -DskipTests
 ```
 
-4. Start the services:
+3. Start the services:
 ```bash
 docker-compose up --build
 ```
@@ -40,18 +35,20 @@ The following services will be available:
 - Order Service: http://localhost:8083
 - Customer Service: http://localhost:8084
 
-### Environment Variables
+### Default Configuration
 
-The following environment variables can be configured in the `.env` file:
+The services are configured with the following default values:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| POSTGRES_DB | Database name | smartstock |
-| POSTGRES_USER | Database user | postgres |
-| POSTGRES_PASSWORD | Database password | postgres |
-| DB_PORT | PostgreSQL port | 5432 |
-| EUREKA_PORT | Eureka Server port | 8761 |
-| GATEWAY_PORT | Gateway Service port | 8080 |
+| Service | Port | Description |
+|---------|------|-------------|
+| Eureka Server | 8761 | Service Discovery |
+| Gateway | 8080 | API Gateway |
+| PostgreSQL | 5432 | Database |
+
+Database Configuration:
+- Database: smartstock
+- Username: postgres
+- Password: postgres
 
 ### Stopping the Services
 
