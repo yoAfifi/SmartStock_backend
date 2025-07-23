@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -33,7 +35,9 @@ public class AuthController {
             String customerEndpoint = customerServiceUrl + "/api/customers";
             restTemplate.postForEntity(customerEndpoint, registeredUser, Void.class);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("Could not create customer record", ex);
+            // if you want to fail hard:
+            throw new IllegalStateException("Customer creation failed", ex);
         }
         return ResponseEntity.ok("User registered successfully");
     }

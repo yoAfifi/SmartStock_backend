@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,45 +23,66 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+    /* ---------- 1.  Skip JWT processing for public endpoints ---------- */
+
+    private static final Pattern POST_CUSTOMER      = Pattern.compile("^/api/customers$");
+    private static final Pattern GET_BY_USER_ID     = Pattern.compile("^/api/customers/byUserId/\\d+$");
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path   = request.getServletPath();   // e.g. "/api/customers"
+        String method = request.getMethod();        // e.g. "POST"
+
+        // allow: POST /api/customers
+        if ("POST".equals(method) && POST_CUSTOMER.matcher(path).matches()) {
+            return true;
+        }
+
+        // allow: GET /api/customers/byUserId/{id}
+        if ("GET".equals(method) && GET_BY_USER_ID.matcher(path).matches()) {
+            return true;
+        }
+
+        // filter everything else
+        return false;
+    }
+
+    /* ---------- 2.  Normal JWT processing for the remaining requests ---------- */
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Get the Authorization header
         String authHeader = request.getHeader("Authorization");
 
-        // If no Authorization header or not a Bearer token, continue to the next filter
+        // No header or not a Bearer token → let Spring Security handle it later
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Extract the token
         String token = authHeader.substring(7);
 
         try {
-            // Extract user information from token
-            String userId = jwtUtil.getUserIdFromToken(token);
+            String userId      = jwtUtil.getUserIdFromToken(token);
             List<String> roles = jwtUtil.getRolesFromToken(token);
 
-            // Convert roles to Spring Security authorities
             List<SimpleGrantedAuthority> authorities = roles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
-            // Create authentication token
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userId, null, authorities);
 
-            // Set the authentication in the SecurityContext
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        } catch (Exception e) {
-            // If token validation fails, clear the security context
+        } catch (Exception ex) {
+            // invalid token → clear context but keep processing (Spring will reject later)
             SecurityContextHolder.clearContext();
         }
 
-        // Continue with the filter chain
         filterChain.doFilter(request, response);
     }
 }

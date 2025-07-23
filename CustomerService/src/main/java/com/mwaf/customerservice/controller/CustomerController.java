@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.mwaf.customerservice.model.Customer;
 import com.mwaf.customerservice.service.CustomerService;
+import com.mwaf.customerservice.dto.CreateCustomerRequest;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -18,7 +19,13 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping
-    public Customer createCustomer(@RequestBody Customer customer) {
+    public Customer createCustomer(@RequestBody CreateCustomerRequest request) {
+        Customer customer = new Customer();
+        customer.setUserId(request.getUserId());
+        customer.setName(request.getName());
+        customer.setEmail(request.getEmail());
+        customer.setPhone(request.getPhone());
+        customer.setAddress(request.getAddress());
         return customerService.createCustomer(customer);
     }
 

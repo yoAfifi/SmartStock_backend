@@ -39,7 +39,7 @@
     </changeSet>
 
     <!-- 3. Create the 'user_roles' join table for many-to-many relationship -->
-    <changeSet id="3" author="yourName">
+    <changeSet id="3" author="afifi">
         <createTable tableName="user_roles">
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -51,7 +51,7 @@
     </changeSet>
 
     <!-- 4. Add foreign key constraint from 'user_roles' to 'users' -->
-    <changeSet id="4" author="yourName">
+    <changeSet id="4" author="afifi">
         <addForeignKeyConstraint
                 baseTableName="user_roles"
                 baseColumnNames="user_id"
@@ -61,7 +61,7 @@
     </changeSet>
 
     <!-- 5. Add foreign key constraint from 'user_roles' to 'roles' -->
-    <changeSet id="5" author="yourName">
+    <changeSet id="5" author="afifi">
         <addForeignKeyConstraint
                 baseTableName="user_roles"
                 baseColumnNames="role_id"
@@ -75,6 +75,5 @@
             <column name="name" value="ROLE_ADMIN"/>
         </insert>
     </changeSet>
-
 
 </databaseChangeLog>

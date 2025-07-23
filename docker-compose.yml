@@ -13,6 +13,8 @@ services:
       - "8080:8080"
     depends_on:
       - eureka-server
+    environment:
+       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/ 
     restart: unless-stopped
     networks:
       - smartstock-network
@@ -21,11 +23,10 @@ services:
     build: ./AuthService
     depends_on:
       - eureka-server
-      - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartstock
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/AuthService_db
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_PASSWORD=youssefyoussef99
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     restart: unless-stopped
     networks:
@@ -35,11 +36,10 @@ services:
     build: ./ProductService
     depends_on:
       - eureka-server
-      - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartstock
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/ProductService_db
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_PASSWORD=youssefyoussef99
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     restart: unless-stopped
     networks:
@@ -49,11 +49,10 @@ services:
     build: ./OrderService
     depends_on:
       - eureka-server
-      - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartstock
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/OrderService_db
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_PASSWORD=youssefyoussef99
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     restart: unless-stopped
     networks:
@@ -63,38 +62,15 @@ services:
     build: ./CustomerService
     depends_on:
       - eureka-server
-      - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smartstock
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/CustomerService_db
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_PASSWORD=youssefyoussef99
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     restart: unless-stopped
-    networks:
-      - smartstock-network
-
-  postgres:
-    image: postgres:14-alpine
-    environment:
-      - POSTGRES_DB=smartstock
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d smartstock"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - smartstock-network
 
 networks:
   smartstock-network:
     driver: bridge
-
-volumes:
-  postgres-data: 
