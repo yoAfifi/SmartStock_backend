@@ -32,3 +32,11 @@ eureka:
 
 jwt:
   secret: ${JWT_SECRET:HMHHFu9OkiscolD1SI+H7Ae5aBwJiw8vyMfcFkZOtYFI4mljUvsHONlsRFlVsYjYg1MlndmrYyJb5aYT/aq1NQ==}
+logging:
+  level:
+    org.springframework.security: DEBUG
+minio:
+  endpoint: http://localhost:9000       # or http://minio:9000 in Docker
+  accessKey: minio
+  secretKey: secret123
+  bucket: product-images

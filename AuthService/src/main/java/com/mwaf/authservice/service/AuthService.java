@@ -82,6 +82,8 @@ public class AuthService {
      * This endpoint requires the client to send a valid admin token in the RegisterRequest.
      */
     public String registerAdmin(RegisterRequest registerRequest) {
+
+         
         if (userRepository.findByUsername(registerRequest.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }

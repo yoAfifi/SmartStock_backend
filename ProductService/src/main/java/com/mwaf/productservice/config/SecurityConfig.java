@@ -1,6 +1,5 @@
 package com.mwaf.productservice.config;
 
-import com.mwaf.productservice.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,27 +19,27 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+//    @Autowired
+//    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
 
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/products/*/reduceStock").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-            
+            .csrf(csrf -> csrf.disable());
+//            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//            .authorizeHttpRequests(auth -> auth
+//                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+//                .requestMatchers(HttpMethod.PUT, "/api/products/*/reduceStock").authenticated()
+//                .requestMatchers(HttpMethod.POST, "/api/products/**").permitAll()
+//                .requestMatchers(HttpMethod.PUT, "/api/products/**").permitAll()
+//                .requestMatchers(HttpMethod.DELETE, "/api/products/**").permitAll()
+//                .anyRequest().authenticated()
+////            )
+//            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
-    
+
 
 }

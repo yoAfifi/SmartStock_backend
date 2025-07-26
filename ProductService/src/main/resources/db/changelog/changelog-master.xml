@@ -23,4 +23,9 @@
             <column name="modified_date" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
+    <changeSet id="2" author="afifi">
+        <addColumn tableName="products">
+            <column name="image_url" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

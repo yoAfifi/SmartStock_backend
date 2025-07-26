@@ -61,3 +61,14 @@ To stop and remove volumes:
 ```bash
 docker-compose down -v
 ``` 
+
+### 
+### docker start minio
+docker compose up -d   # start (once)
+
+
+### docker stop minio
+docker compose down    # stop
+
+### See current status
+docker ps -a
