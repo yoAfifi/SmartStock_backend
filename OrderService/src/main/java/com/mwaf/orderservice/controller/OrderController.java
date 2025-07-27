@@ -1,7 +1,9 @@
 package com.mwaf.orderservice.controller;
 
 import com.mwaf.orderservice.dto.Customer;
+import com.mwaf.orderservice.dto.OrderRequest;
 import com.mwaf.orderservice.model.Order;
+import com.mwaf.orderservice.model.OrderItem;
 import com.mwaf.orderservice.service.OrderService;
 import com.mwaf.orderservice.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -30,7 +34,13 @@ public class OrderController {
 
     // Place a new order using the customer ID from the security context
     @PostMapping("/placeOrder")
-    public ResponseEntity<Order> placeOrder(@RequestBody Order order) {
+    public ResponseEntity<Order> placeOrder(@RequestBody OrderRequest orderRequest) {
+        return createOrder(orderRequest);
+    }
+
+    // Create a new order (alternative endpoint)
+    @PostMapping
+    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
         // Get the authenticated user from the security context
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
@@ -58,7 +68,26 @@ public class OrderController {
             }
             
             if (customerId != null) {
+                // Convert OrderRequest to Order entity
+                Order order = new Order();
                 order.setCustomerId(customerId);
+                order.setStatus("NEW");
+                order.setOrderDate(LocalDateTime.now());
+                
+                // Convert OrderItemRequest to OrderItem entities
+                if (orderRequest.getOrderItems() != null) {
+                    List<OrderItem> orderItems = orderRequest.getOrderItems().stream()
+                        .map(itemRequest -> {
+                            OrderItem item = new OrderItem();
+                            item.setProductId(itemRequest.getProductId());
+                            item.setQuantity(itemRequest.getQuantity());
+                            item.setOrder(order);
+                            return item;
+                        })
+                        .collect(Collectors.toList());
+                    order.setOrderItems(orderItems);
+                }
+                
                 try {
                     Order placedOrder = orderService.createOrder(order);
                     return ResponseEntity.status(HttpStatus.CREATED).body(placedOrder);

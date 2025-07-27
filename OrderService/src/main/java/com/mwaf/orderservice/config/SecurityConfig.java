@@ -32,9 +32,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Allow all authenticated users to place orders
                 .requestMatchers(HttpMethod.POST, "/api/orders/placeOrder").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/orders").authenticated()
                 // Admin can access all order endpoints
                 .requestMatchers(HttpMethod.GET, "/api/orders").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/orders").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/orders/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/orders/**").hasRole("ADMIN")
                 // Users can view their own orders

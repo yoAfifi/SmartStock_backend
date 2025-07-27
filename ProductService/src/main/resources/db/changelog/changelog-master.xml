@@ -28,4 +28,146 @@
             <column name="image_url" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="3" author="afifi">
+        <createTable tableName="categories">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="slug" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="modified_date" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="4" author="afifi">
+        <addColumn tableName="products">
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="average_rating" type="NUMERIC(2,1)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="5" author="afifi">
+        <addForeignKeyConstraint baseTableName="products" baseColumnNames="category_id"
+                                  constraintName="fk_products_category"
+                                  referencedTableName="categories" referencedColumnNames="id"
+                                  onDelete="SET NULL"/>
+    </changeSet>
+    
+    <changeSet id="6" author="afifi">
+        <insert tableName="categories">
+            <column name="name" value="Stationery"/>
+            <column name="slug" value="stationery"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Electronics"/>
+            <column name="slug" value="electronics"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Books"/>
+            <column name="slug" value="books"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Clothing"/>
+            <column name="slug" value="clothing"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet id="7" author="afifi">
+        <createTable tableName="product_reviews">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(200)"/>
+            <column name="comment" type="VARCHAR(2000)"/>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="modified_date" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="8" author="afifi">
+        <addForeignKeyConstraint baseTableName="product_reviews" baseColumnNames="product_id"
+                                  constraintName="fk_product_reviews_product"
+                                  referencedTableName="products" referencedColumnNames="id"
+                                  onDelete="CASCADE"/>
+    </changeSet>
+    
+    <changeSet id="9" author="afifi">
+        <addUniqueConstraint tableName="product_reviews" columnNames="product_id, author_user_id"
+                             constraintName="uk_product_reviews_user"/>
+    </changeSet>
+    
+    <changeSet id="10" author="afifi">
+        <createTable tableName="admin_notifications">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_stock" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="read" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP"/>
+            <column name="modified_date" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="11" author="afifi">
+        <addForeignKeyConstraint baseTableName="admin_notifications" baseColumnNames="product_id"
+                                  constraintName="fk_admin_notifications_product"
+                                  referencedTableName="products" referencedColumnNames="id"
+                                  onDelete="CASCADE"/>
+    </changeSet>
+    
+    <changeSet id="12" author="afifi">
+        <createTable tableName="product_images">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="13" author="afifi">
+        <addForeignKeyConstraint baseTableName="product_images" baseColumnNames="product_id"
+                                  constraintName="fk_product_images_product"
+                                  referencedTableName="products" referencedColumnNames="id"
+                                  onDelete="CASCADE"/>
+    </changeSet>
 </databaseChangeLog>
